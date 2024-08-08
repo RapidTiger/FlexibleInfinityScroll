@@ -1,7 +1,7 @@
-import React, { ElementType, HTMLAttributes, MutableRefObject } from "react";
+import React, { ElementType, HTMLAttributes, MutableRefObject, ReactNode } from "react";
 type ScrollPagingWrapType = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
     as?: ElementType;
-    children: Element;
+    children: ReactNode;
     wrapElementRef: MutableRefObject<HTMLElement | undefined>;
     minHeight: number;
     paddingTop: number;
