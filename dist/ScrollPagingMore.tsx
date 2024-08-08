@@ -1,0 +1,35 @@
+import React, {ElementType, HTMLAttributes, MutableRefObject, ReactNode, useEffect, useRef} from "react";
+
+type ScrollPagingMoreType = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
+	as?: ElementType
+	children: ReactNode
+	moreElementRef: MutableRefObject<HTMLElement | undefined>
+	event: Function
+	[key: string]: any
+}
+
+export const ScrollPagingMore = ({as = 'div', children, moreElementRef, event, ...other}: any) => {
+	const Tag = as;
+	const throttle = useRef(false);
+
+	useEffect(() => {
+		const moreEl = moreElementRef.current as Element;
+		const observer = new IntersectionObserver(async ([entry]) => {
+			if (entry.isIntersecting && !throttle.current) {
+				throttle.current = true;
+				await event();
+				throttle.current = false;
+			}
+		})
+		observer.observe(moreEl);
+	}, []);
+
+	return (
+		<Tag ref={(r: HTMLElement) => {
+			moreElementRef.current = r
+			other?.ref && other.ref(r)
+		}} {...other}>
+			{children}
+		</Tag>
+	)
+}
