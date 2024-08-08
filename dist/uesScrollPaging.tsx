@@ -57,7 +57,6 @@ export const uesScrollPaging = <T, >({list, padding = 200}: ScrollPagingHookType
 			const computedStyle = getComputedStyle(containerElementRef.current);
 			const paddingTop = parseInt(computedStyle.getPropertyValue('padding-top'));
 			const paddingBot = parseInt(computedStyle.getPropertyValue('padding-bottom'));
-			console.log(paddingTop + paddingBot)
 			const offsetTop = containerElementRef.current.offsetTop;
 			const scrollTop = containerElementRef.current.scrollTop + offsetTop;
 			const scrollBot = scrollTop + containerElementRef.current.offsetHeight - (paddingTop + paddingBot);
