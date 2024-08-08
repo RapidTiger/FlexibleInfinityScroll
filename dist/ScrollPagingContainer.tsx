@@ -1,8 +1,8 @@
 import React, {ElementType, HTMLAttributes, MutableRefObject, ReactNode} from "react";
 
 type ScrollPagingContainerType = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
-	as?: ElementType;
-	children: ReactNode;
+	as?: ElementType
+	children: ReactNode
 	scrollEvent: Function
 	containerElementRef: MutableRefObject<HTMLElement | undefined>
 	[key: string]: any
