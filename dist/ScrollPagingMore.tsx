@@ -1,4 +1,4 @@
-import React, {ElementType, HTMLAttributes, MutableRefObject, ReactNode, useEffect, useRef} from "react";
+import React, {ElementType, HTMLAttributes, MutableRefObject, ReactNode, useEffect, useRef, useState} from "react";
 
 type ScrollPagingMoreType = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 	as?: ElementType
@@ -8,7 +8,7 @@ type ScrollPagingMoreType = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 	[key: string]: any
 }
 
-export const ScrollPagingMore = ({as = 'div', children, moreElementRef, event, ...other}: any) => {
+export const ScrollPagingMore = ({as = 'div', children, moreElementRef, event, ...other}: ScrollPagingMoreType) => {
 	const Tag = as;
 	const throttle = useRef(false);
 
@@ -19,6 +19,8 @@ export const ScrollPagingMore = ({as = 'div', children, moreElementRef, event, .
 				throttle.current = true;
 				await event();
 				throttle.current = false;
+				observer.disconnect()
+				observer.observe(moreEl)
 			}
 		})
 		observer.observe(moreEl);
