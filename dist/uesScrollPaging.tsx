@@ -27,63 +27,75 @@ export const uesScrollPaging = <T, >({list, padding = 200}: ScrollPagingHookType
 	const [fillHeight, setFillHeight] = useState(0)
 
 	useEffect(() => {
-		if (wrapElementRef.current) {
-			if (!containerElementRef.current) {
-				containerElementRef.current = document.querySelector('html') || document.body
-				window.addEventListener('scroll', () => scrollEvent())
-			}
-			const scrollHeight = containerElementRef.current.scrollHeight;
-			const offsetHeight = containerElementRef.current.offsetHeight;
-			if (scrollHeight > offsetHeight) {
-				const computedStyle = getComputedStyle(containerElementRef.current);
-				const paddingTop = parseInt(computedStyle.getPropertyValue('padding-top'));
-				const paddingBot = parseInt(computedStyle.getPropertyValue('padding-bottom'));
-				const containerHeight = scrollHeight - (paddingTop + paddingBot);
-				const moreHeight = moreElementRef.current?.offsetHeight || 0;
-				setMinHeight(containerHeight - moreHeight)
-			} else {
-				setMinHeight(0)
-			}
+		if (!containerElementRef.current) {
+			containerElementRef.current = document.querySelector('html') || document.body
 		}
+	}, []);
+
+	useEffect(() => {
+		const wrapElement = wrapElementRef.current;
+		const containerElement = containerElementRef.current;
 
 		setItemOffset(v => {
-			if (containerElementRef.current) {
+			if (containerElement) {
 				itemElementRef.current.forEach((e, i) => {
 					if (e && !v[i]) {
 						const top = e.offsetTop;
-						const bot = top + e.offsetHeight;
+						const bot = top + e.clientHeight;
 						v[i] = {top, bot, visible: 2}
 					}
 				})
 			}
 			return v
 		})
+
+		if (wrapElement && containerElement) {
+			const scrollHeight = containerElement.scrollHeight;
+			const clientHeight = containerElement.clientHeight;
+			if (list.length && scrollHeight > clientHeight) {
+				const computedStyle = getComputedStyle(containerElement);
+				const paddingTop = parseInt(computedStyle.getPropertyValue('padding-top'));
+				const paddingBot = parseInt(computedStyle.getPropertyValue('padding-bottom'));
+				const containerHeight = scrollHeight - (paddingTop + paddingBot + wrapElement.offsetTop);
+				const moreHeight = moreElementRef.current?.clientHeight || 0;
+				setMinHeight(containerHeight - moreHeight)
+			} else {
+				setMinHeight(0)
+			}
+		}
+
 		setScrollTrigger(v => ++v)
 	}, [list])
 
 	useEffect(() => {
 		scrollEvent(true)
+		if (containerElementRef.current?.tagName === 'HTML') {
+			const listener = () => scrollEvent();
+			window.addEventListener('scroll', listener)
+			return () => window.removeEventListener('scroll', listener)
+		}
 	}, [scrollTrigger]);
 
 	const scrollEvent = (isRender = false) => {
-		if (containerElementRef.current && wrapElementRef.current) {
-			const computedStyle = getComputedStyle(containerElementRef.current);
-			const paddingTop = parseInt(computedStyle.getPropertyValue('padding-top'));
-			const paddingBot = parseInt(computedStyle.getPropertyValue('padding-bottom'));
-			const offsetTop = containerElementRef.current.offsetTop;
-			const scrollTop = containerElementRef.current.scrollTop + offsetTop;
-			const warpTop = wrapElementRef.current.offsetTop;
-			const scrollBot = scrollTop + containerElementRef.current.offsetHeight - (paddingTop + paddingBot);
+		const containerElement = containerElementRef.current;
+		const wrapElement = wrapElementRef.current;
+		if (containerElement && wrapElement) {
+			const paddingTop = parseInt(getComputedStyle(containerElement).paddingTop);
+			const paddingBot = parseInt(getComputedStyle(containerElement).paddingBottom);
+			const offsetTop = containerElement.offsetTop;
+			const scrollTop = containerElement.scrollTop + offsetTop;
+			const warpTop = wrapElement.offsetTop;
+			const scrollBot = scrollTop + containerElement.clientHeight - (paddingTop + paddingBot);
 			const firstTop = scrollTop < visibleFirstTopRef.current;
 			const lastBot = scrollBot > visibleLastBotRef.current;
 
 			if (isRender || visibleFirstTopRef.current < 0 || firstTop || lastBot) {
 				let first = true
-				setItemOffset(v => v.map(v => {
+				setItemOffset(v => v.map((v, i) => {
 					v.visible = scrollTop - padding <= v.bot && scrollBot + padding >= v.top ? 1 : 0
 					if (v.visible === 1) {
 						visibleLastBotRef.current = v.bot
-						setFillHeight(Math.max(minHeight - v.bot, 0))
+						setFillHeight(Math.max(minHeight - (v.bot - offsetTop), 0))
 						if (first) {
 							visibleFirstTopRef.current = v.top
 							setPaddingTop(v.top - warpTop)
@@ -100,6 +112,6 @@ export const uesScrollPaging = <T, >({list, padding = 200}: ScrollPagingHookType
 		container: {scrollEvent, containerElementRef},
 		wrap: {wrapElementRef, minHeight, paddingTop},
 		item: {list, itemOffset, itemElementRef, fillHeight},
-		more: {moreElementRef}
+		more: {moreElementRef},
 	}
 }
