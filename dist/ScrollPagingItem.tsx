@@ -22,7 +22,7 @@ export const ScrollPagingItem = <T, >({list = [], itemOffset, as = 'div', childr
 						<Tag {...other} ref={(r: HTMLElement) => {
 							itemElementRef.current[i] = r
 							other?.ref && other.ref(r)
-						}} index={i}>
+						}}>
 							{children(v, i)}
 						</Tag>
 						{(itemOffsetType?.visible === 1) && !itemOffset?.[i + 1]?.visible && <div style={{height: fillHeight}}></div>}

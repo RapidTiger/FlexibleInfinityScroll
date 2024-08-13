@@ -16,7 +16,7 @@ export const ScrollPagingWrap = ({as = 'div', children, wrapElementRef, minHeigh
 		<Tag {...other} ref={(r: HTMLElement) => {
 			wrapElementRef.current = r
 			other?.ref && other.ref(r)
-		}} style={{minHeight, paddingTop}}>
+		}} style={{minHeight, paddingTop, ...(other.style || {})}}>
 			{children}
 		</Tag>
 	)
