@@ -82,17 +82,18 @@ export const uesScrollPaging = <T, >({list, padding = 200}: ScrollPagingHookType
 		if (containerElement && wrapElement) {
 			const paddingTop = parseInt(getComputedStyle(containerElement).paddingTop);
 			const paddingBot = parseInt(getComputedStyle(containerElement).paddingBottom);
+			const paddingY = paddingTop + paddingBot;
 			const offsetTop = containerElement.offsetTop;
 			const scrollTop = containerElement.scrollTop + offsetTop;
 			const warpTop = wrapElement.offsetTop;
-			const scrollBot = scrollTop + containerElement.clientHeight - (paddingTop + paddingBot);
+			const scrollBot = scrollTop + containerElement.clientHeight - paddingY;
 			const firstTop = scrollTop < visibleFirstTopRef.current;
-			const lastBot = scrollBot > visibleLastBotRef.current;
+			const lastBot = scrollBot > visibleLastBotRef.current - paddingY;
 
 			if (isRender || visibleFirstTopRef.current < 0 || firstTop || lastBot) {
 				let first = true
 				setItemOffset(v => v.map((v, i) => {
-					v.visible = scrollTop - padding <= v.bot && scrollBot + padding >= v.top ? 1 : 0
+					v.visible = scrollTop - padding <= v.bot && scrollBot + padding + paddingY >= v.top ? 1 : 0
 					if (v.visible === 1) {
 						visibleLastBotRef.current = v.bot
 						setFillHeight(Math.max(minHeight - (v.bot - offsetTop), 0))
