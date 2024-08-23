@@ -107,7 +107,8 @@ export default FullScreen
 
 .scroll_container {
   overflow: auto;
-  width: 500px;
+  width: 50vw;
+  min-width: 400px;
   height: 500px;
   border: 1px solid grey;
   padding: 1rem

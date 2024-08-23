@@ -30,6 +30,25 @@ export const uesScrollPaging = <T, >({list, padding = 200}: ScrollPagingHookType
 		if (!containerElementRef.current) {
 			containerElementRef.current = document.querySelector('html') || document.body
 		}
+
+		let throttle = false
+		let timeout: NodeJS.Timeout
+
+		const resetOffsetAct = () => {
+			if (throttle && timeout) clearTimeout(timeout);
+			throttle = true
+			timeout = setTimeout(() => {
+				setItemOffset([])
+				setMinHeight(0)
+				setPaddingTop(0)
+				setFillHeight(0)
+			}, 500);
+		};
+		window.addEventListener('resize', resetOffsetAct)
+
+		return () => {
+			window.removeEventListener('resize', resetOffsetAct)
+		}
 	}, []);
 
 	useEffect(() => {
@@ -72,7 +91,9 @@ export const uesScrollPaging = <T, >({list, padding = 200}: ScrollPagingHookType
 		if (containerElementRef.current?.tagName === 'HTML') {
 			const listener = () => scrollEvent();
 			window.addEventListener('scroll', listener)
-			return () => window.removeEventListener('scroll', listener)
+			return () => {
+				window.removeEventListener('scroll', listener)
+			}
 		}
 	}, [scrollTrigger]);
 
