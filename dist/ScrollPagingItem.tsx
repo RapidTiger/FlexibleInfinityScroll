@@ -25,7 +25,7 @@ export const ScrollPagingItem = <T, >({list = [], itemOffset, as = 'div', childr
 						}}>
 							{children(v, i)}
 						</Tag>
-						{(itemOffsetType?.visible === 1) && !itemOffset?.[i + 1]?.visible && <div style={{height: fillHeight}}></div>}
+						{(!!fillHeight && itemOffsetType?.visible === 1) && !itemOffset?.[i + 1]?.visible && <div style={{height: fillHeight}}></div>}
 					</Fragment>
 			})}
 		</>
