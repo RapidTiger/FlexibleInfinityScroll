@@ -4,7 +4,7 @@ type ScrollPagingItemType<T> = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
     list: T[];
     itemOffset: ItemOffsetType[];
     as?: ElementType;
-    children: [(v: T, i: number) => ReactNode] | [(v: T, i: number) => ReactNode, ReactNode];
+    children: ((v: T, i: number) => ReactNode) | [(v: T, i: number) => ReactNode, ReactNode];
     itemElementRef: MutableRefObject<HTMLElement[]>;
     fillHeight: number;
     end: boolean;
