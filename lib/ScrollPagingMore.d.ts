@@ -4,7 +4,8 @@ type ScrollPagingMoreType = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
     children: ReactNode;
     moreElementRef: MutableRefObject<HTMLElement | undefined>;
     event: Function;
+    end: boolean;
     [key: string]: any;
 };
-export declare const ScrollPagingMore: ({ as, children, moreElementRef, event, ...other }: ScrollPagingMoreType) => React.JSX.Element;
+export declare const ScrollPagingMore: ({ as, children, moreElementRef, event, end, ...other }: ScrollPagingMoreType) => React.JSX.Element;
 export {};

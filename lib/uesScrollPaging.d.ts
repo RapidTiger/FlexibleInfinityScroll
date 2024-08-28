@@ -2,7 +2,7 @@ type ScrollPagingHookType<T> = {
     list: T[];
     padding?: number;
 };
-export type itemOffsetType = {
+export type ItemOffsetType = {
     top: number;
     bot: number;
     visible: number;
@@ -19,12 +19,16 @@ export declare const uesScrollPaging: <T>({ list, padding }: ScrollPagingHookTyp
     };
     item: {
         list: T[];
-        itemOffset: itemOffsetType[];
+        itemOffset: ItemOffsetType[];
         itemElementRef: import("react").MutableRefObject<HTMLElement[]>;
         fillHeight: number;
+        end: boolean;
     };
     more: {
         moreElementRef: import("react").MutableRefObject<HTMLElement | undefined>;
+        end: boolean;
     };
+    setEnd: () => void;
+    reset: () => void;
 };
 export {};

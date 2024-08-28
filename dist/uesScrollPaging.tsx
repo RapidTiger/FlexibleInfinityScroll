@@ -6,7 +6,7 @@ type ScrollPagingHookType<T> = {
 	padding?: number
 }
 
-export type itemOffsetType = {
+export type ItemOffsetType = {
 	top: number
 	bot: number
 	visible: number
@@ -22,12 +22,13 @@ export const uesScrollPaging = <T, >({list, padding = 200}: ScrollPagingHookType
 	const visibleFirstTopRef = useRef(-1)
 	const visibleLastBotRef = useRef(-1)
 
-	const [itemOffset, setItemOffset] = useState<itemOffsetType[]>([])
+	const [itemOffset, setItemOffset] = useState<ItemOffsetType[]>([])
 	const [listTrigger, setListTrigger] = useState(0)
 	const [scrollTrigger, setScrollTrigger] = useState(0)
 	const [minHeight, setMinHeight] = useState(0)
 	const [paddingTop, setPaddingTop] = useState(0)
 	const [fillHeight, setFillHeight] = useState(0)
+	const [end, setEnd] = useState(false)
 
 	useEffect(() => {
 		if (!containerElementRef.current) {
@@ -40,12 +41,7 @@ export const uesScrollPaging = <T, >({list, padding = 200}: ScrollPagingHookType
 		const resetOffsetAct = () => {
 			if (throttle && timeout) clearTimeout(timeout);
 			throttle = true
-			timeout = setTimeout(() => {
-				setItemOffset([])
-				setMinHeight(0)
-				setPaddingTop(0)
-				setFillHeight(0)
-			}, 500);
+			timeout = setTimeout(reset, 500);
 		};
 		window.addEventListener('resize', resetOffsetAct)
 
@@ -147,10 +143,22 @@ export const uesScrollPaging = <T, >({list, padding = 200}: ScrollPagingHookType
 		}
 	}
 
+	const reset = () => {
+		setItemOffset([])
+		setListTrigger(0)
+		setScrollTrigger(0)
+		setMinHeight(0)
+		setPaddingTop(0)
+		setFillHeight(0)
+		useState(false)
+	}
+
 	return {
 		container: {scrollEvent, containerElementRef},
 		wrap: {wrapElementRef, minHeight, paddingTop},
-		item: {list, itemOffset, itemElementRef, fillHeight},
-		more: {moreElementRef},
+		item: {list, itemOffset, itemElementRef, fillHeight, end},
+		more: {moreElementRef, end},
+		setEnd: () => setEnd(true),
+		reset
 	}
 }

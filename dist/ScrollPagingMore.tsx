@@ -5,10 +5,11 @@ type ScrollPagingMoreType = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 	children: ReactNode
 	moreElementRef: MutableRefObject<HTMLElement | undefined>
 	event: Function
+	end: boolean
 	[key: string]: any
 }
 
-export const ScrollPagingMore = ({as = 'div', children, moreElementRef, event, ...other}: ScrollPagingMoreType) => {
+export const ScrollPagingMore = ({as = 'div', children, moreElementRef, event, end, ...other}: ScrollPagingMoreType) => {
 	const Tag = as;
 	const throttle = useRef(false);
 
@@ -27,11 +28,13 @@ export const ScrollPagingMore = ({as = 'div', children, moreElementRef, event, .
 	}, []);
 
 	return (
-		<Tag ref={(r: HTMLElement) => {
-			moreElementRef.current = r
-			other?.ref && other.ref(r)
-		}} {...other}>
-			{children}
-		</Tag>
+		<>
+			{!end && <Tag ref={(r: HTMLElement) => {
+				moreElementRef.current = r
+				other?.ref && other.ref(r)
+			}} {...other}>
+				{children}
+			</Tag>}
+		</>
 	)
 }
