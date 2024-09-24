@@ -1,6 +1,6 @@
 {
   "name": "flexible-infinity-scroll",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "",
   "repository": {
     "type": "git",
@@ -26,14 +26,10 @@
   "keywords": [
     "react",
     "typescript",
-    "mount",
-    "unmount",
-    "animation",
-    "keyframes",
-    "transition",
-    "timeout",
-    "style",
-    "css",
+    "scroll",
+    "paging",
+    "infinity",
+    "flexible",
     "npm"
   ],
   "dependencies": {
